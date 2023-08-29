@@ -2,7 +2,7 @@ name: Proca Server CI
 
 on:
   push:
-    branches: [ main, feat/cd ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
