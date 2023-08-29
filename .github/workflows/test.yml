@@ -17,6 +17,7 @@ jobs:
       uses: erlef/setup-beam@v1
       with:
         version-file: proca/.tool-versions
+        version-type: strict
       # uses: erlef/setup-elixir@885971a72ed1f9240973bd92ab57af8c1aa68f24
       # with:
       #   elixir-version: '1.12.0' # Define the elixir version [required]
