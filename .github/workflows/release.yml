@@ -8,6 +8,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          version-file: proca/.tool-versions
+          version-type: strict
       - name: Build
         run: echo ${{ github.sha }} > Release.txt
       - name: Build
