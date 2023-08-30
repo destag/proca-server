@@ -4,7 +4,7 @@ defmodule Proca.MixProject do
   def project do
     [
       app: :proca,
-      version: "3.4.1",
+      version: "3.4.2",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
@@ -27,7 +27,15 @@ defmodule Proca.MixProject do
   def application do
     [
       mod: {Proca.Application, []},
-      extra_applications: [:logger, :ssl, :runtime_tools, :absinthe_plug, :sentry, :ecto_trail]
+      extra_applications: [
+        :logger,
+        :ssl,
+        :runtime_tools,
+        :absinthe_plug,
+        :sentry,
+        :ecto_trail,
+        :debugger
+      ]
     ]
   end
 
