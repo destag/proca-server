@@ -21,6 +21,7 @@ jobs:
       - run: ls -a proca/_build
       - run: ls -a proca/_build/prod
       - run: ls -a proca/_build/prod/rel
+      - run: ls -a proca/_build/prod/rel/proca
       - run: tar -tvf proca/_build/prod/proca-3.4.1.tar.gz
       - name: Test
         run: cat Release.txt
