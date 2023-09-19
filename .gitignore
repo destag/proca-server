@@ -8,3 +8,4 @@ __pycache__
 sdk/crypto/dist
 *.env
 *.egg-info
+_notes.md
