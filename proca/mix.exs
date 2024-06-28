@@ -56,7 +56,7 @@ defmodule Proca.MixProject do
       {:ex2ms, "~> 1.0"},
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:gettext, "~> 0.11"},
+      {:gettext, "~> 0.19"},
       {:jason, "~> 1.2"},
       {:sentry, "~> 8.0"},
       {:plug_cowboy, "~> 2.3"},
