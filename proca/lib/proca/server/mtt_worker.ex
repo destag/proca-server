@@ -28,7 +28,7 @@ defmodule Proca.Server.MTTWorker do
   alias Proca.Service.{EmailBackend, EmailTemplate}
   import Proca.Stage.Support, only: [camel_case_keys: 1]
 
-  import Logger
+  require Logger
 
   @default_locale "en"
 
