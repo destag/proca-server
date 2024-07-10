@@ -2,10 +2,6 @@ defmodule ProcaWeb.CampaignResolverTest do
   use ProcaWeb.ConnCase
 
   import Proca.StoryFactory, only: [red_story: 0]
-  import Proca.Repo
-  import Ecto.Query, only: [from: 2]
-
-  alias Proca.{Repo, Action, Supporter}
 
   setup do
     red_story()
@@ -83,8 +79,8 @@ defmodule ProcaWeb.CampaignResolverTest do
 
   test "list all campaigns", %{
     conn: conn,
-    red_campaign: c1,
-    yellow_campaign: c2
+    red_campaign: _c1,
+    yellow_campaign: _c2
   } do
     q = list_query()
 
@@ -160,7 +156,7 @@ defmodule ProcaWeb.CampaignResolverTest do
     conn: conn,
     yellow_campaign: camp,
     yellow_user: user,
-    orange_aps: [partner_ap | _]
+    orange_aps: [_partner_ap | _]
   } do
     q = delete_query(%{"id" => camp.id})
 

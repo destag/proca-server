@@ -2,7 +2,6 @@ defmodule EciDataTest do
   use Proca.DataCase
   doctest Proca.Contact.EciData
 
-  alias Proca.Contact.Data
   alias Proca.Contact.{Input, EciData}
   import Ecto.Changeset
   import ProcaWeb.Helper, only: [format_errors: 1]
@@ -166,7 +165,7 @@ defmodule EciDataTest do
 
     assert [%{message: "is invalid", path: ["nationality", "documentType"]}] = format_errors(c)
 
-    dn_spaces = %{d | nationality: %{n | document_number: "R 1234567"}}
+    _dn_spaces = %{d | nationality: %{n | document_number: "R 1234567"}}
 
     assert not c.valid?
 

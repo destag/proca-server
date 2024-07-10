@@ -49,7 +49,7 @@ defmodule ProcaWeb.Api.UpsertActionPage do
       }
       """
 
-      auth = Proca.Auth.get_for_user(ap, user)
+      Proca.Auth.get_for_user(ap, user)
 
       res =
         conn

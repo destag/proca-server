@@ -1,7 +1,6 @@
 defmodule ProcaWeb.Api.DoubleOptInTest do
   use ProcaWeb.ConnCase
   import Proca.StoryFactory, only: [blue_story: 0]
-  import Ecto.Query
   import Ecto.Changeset
   alias Proca.Factory
   alias Absinthe.Resolution
@@ -9,19 +8,16 @@ defmodule ProcaWeb.Api.DoubleOptInTest do
   use Proca.TestEmailBackend
   use Proca.TestProcessing
 
-  alias Proca.{Repo, Action, Supporter}
-
-  @basic_data %{}
+  alias Proca.{Repo, Supporter}
 
   describe "Double opt in" do
     setup ctx do
-      story =
-        blue_story()
-        |> Map.merge(ctx)
+      blue_story()
+      |> Map.merge(ctx)
     end
 
     test "for action with opt_in", %{conn: conn, pages: [ap]} do
-      {ref, email} = add_action_contact(ap, true)
+      {ref, _email} = add_action_contact(ap, true)
 
       %{actions: [a]} =
         check_supporter(ref, status: :new, email_status: :none, consent: {true, true})
@@ -40,7 +36,7 @@ defmodule ProcaWeb.Api.DoubleOptInTest do
           consent: {true, true}
         )
 
-      a = check_action(s, status: :delivered)
+      _a = check_action(s, status: :delivered)
     end
   end
 
@@ -62,7 +58,7 @@ defmodule ProcaWeb.Api.DoubleOptInTest do
     end
 
     test "Confirm but not double opt in", %{conn: conn, pages: [ap]} do
-      {ref, email} = add_action_contact(ap, false)
+      {ref, _email} = add_action_contact(ap, false)
 
       s = check_supporter(ref, status: :new, email_status: :none, consent: {true, false})
       a = check_action(s, status: :new)
@@ -80,11 +76,11 @@ defmodule ProcaWeb.Api.DoubleOptInTest do
       process(a)
 
       s = check_supporter(ref, status: :accepted, email_status: :none, consent: {true, false})
-      a = check_action(s, status: :delivered)
+      _a = check_action(s, status: :delivered)
     end
 
     test "Confirm but do double opt in", %{conn: conn, pages: [ap]} do
-      {ref, email} = add_action_contact(ap, false)
+      {ref, _email} = add_action_contact(ap, false)
 
       s = check_supporter(ref, status: :new, email_status: :none, consent: {true, false})
       a = check_action(s, status: :new)
@@ -113,11 +109,11 @@ defmodule ProcaWeb.Api.DoubleOptInTest do
           consent: {true, false}
         )
 
-      a = check_action(s, status: :delivered)
+      _a = check_action(s, status: :delivered)
     end
 
     test "Confirm but do form opt in and double opt in", %{conn: conn, pages: [ap]} do
-      {ref, email} = add_action_contact(ap, true)
+      {ref, _email} = add_action_contact(ap, true)
 
       s = check_supporter(ref, status: :new, email_status: :none, consent: {true, false})
       a = check_action(s, status: :new)
@@ -147,11 +143,11 @@ defmodule ProcaWeb.Api.DoubleOptInTest do
           consent: {true, false}
         )
 
-      a = check_action(s, status: :delivered)
+      _a = check_action(s, status: :delivered)
     end
 
     test "Reject and not double opt in", %{conn: conn, pages: [ap]} do
-      {ref, email} = add_action_contact(ap, false)
+      {ref, _email} = add_action_contact(ap, false)
 
       s = check_supporter(ref, status: :new, email_status: :none, consent: {true, false})
       a = check_action(s, status: :new)
@@ -169,7 +165,7 @@ defmodule ProcaWeb.Api.DoubleOptInTest do
       process(a)
 
       s = check_supporter(ref, status: :rejected, email_status: :none, consent: {true, false})
-      a = check_action(s, status: :rejected)
+      _a = check_action(s, status: :rejected)
     end
   end
 
@@ -185,7 +181,7 @@ defmodule ProcaWeb.Api.DoubleOptInTest do
       )
 
     assert added.processing_status == status
-    assert [%{delivery_consent: dc, communication_consent: cc}] = added.contacts
+    assert [%{delivery_consent: ^dc, communication_consent: ^cc}] = added.contacts
     assert added.email_status == es
 
     added
@@ -198,11 +194,11 @@ defmodule ProcaWeb.Api.DoubleOptInTest do
     %{act | supporter: supporter}
   end
 
-  def click_doi_link(conn, action, doi) do
+  def click_doi_link(conn, action, _doi) do
     refbase = Supporter.base_encode(action.supporter.fingerprint)
     link = "/link/d/#{action.id}/#{refbase}"
     link = link <> "?redir=https://landingpage.com"
-    res = get(conn, link, %{})
+    get(conn, link, %{})
     process(action)
   end
 
@@ -215,7 +211,7 @@ defmodule ProcaWeb.Api.DoubleOptInTest do
         "?redir=https://landingpage.com"
 
     link = link <> if qa == nil, do: "", else: "&" <> qa
-    res = get(conn, link, %{})
+    get(conn, link, %{})
     process(action)
   end
 

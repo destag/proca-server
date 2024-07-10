@@ -1,11 +1,9 @@
 defmodule Proca.Confirm.InviteTest do
   use Proca.DataCase
   import Proca.StoryFactory, only: [red_story: 0]
-  alias Proca.Factory
 
-  alias Proca.{Confirm, Repo, Org}
+  alias Proca.Confirm
   use Proca.TestEmailBackend
-  import Ecto.Changeset
 
   setup do
     red_story()
@@ -14,7 +12,7 @@ defmodule Proca.Confirm.InviteTest do
   test "Invite red org to yellow campaign", %{
     red_bot: red_staff,
     yellow_ap: ap,
-    yellow_org: yellow_org
+    yellow_org: _yellow_org
   } do
     cnf =
       Confirm.AddPartner.changeset(ap, red_staff.user.email)

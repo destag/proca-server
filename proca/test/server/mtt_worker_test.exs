@@ -28,7 +28,7 @@ defmodule Proca.Server.MTTWorkerTest do
   # end
 
   describe "selecting targets to send" do
-    setup %{campaign: c, ap: ap, targets: ts} do
+    setup %{campaign: _c, ap: ap, targets: ts} do
       action1 =
         Factory.insert(:action,
           action_page: ap,
@@ -55,31 +55,31 @@ defmodule Proca.Server.MTTWorkerTest do
       }
     end
 
-    test "return all testing mtts at once", %{campaign: c, ap: ap, targets: ts} do
+    test "return all testing mtts at once", %{campaign: c, ap: _ap, targets: _ts} do
       tids = MTTWorker.get_sendable_target_ids(c)
       assert length(tids) == 10
 
       emails = Proca.Repo.all(MTTWorker.query_test_emails_to_delete())
-      assert length(emails) == 0
+      assert Enum.empty?(emails)
 
       emails = MTTWorker.get_test_emails_to_send()
       assert length(emails) == 3
 
       # Before dupe rank was run:
       emails = MTTWorker.get_emails_to_send(tids, {700, 700})
-      assert length(emails) == 0
+      assert Enum.empty?(emails)
 
       assert {:ok, _} = Proca.Server.MTT.dupe_rank()
 
       emails = MTTWorker.get_emails_to_send(tids, {1, 700})
-      assert length(emails) == 0
+      assert Enum.empty?(emails)
 
       emails = MTTWorker.get_emails_to_send(tids, {700, 700})
       assert length(emails) == 7
 
       # we have 3 test emails and 7 live emails (one per target), so at 699 we still do not send that one i guess?
       emails = MTTWorker.get_emails_to_send(tids, {699, 700})
-      assert length(emails) == 0
+      assert Enum.empty?(emails)
     end
   end
 
@@ -100,7 +100,7 @@ defmodule Proca.Server.MTTWorkerTest do
   end
 
   describe "scheduling messages for one target" do
-    setup %{campaign: c, ap: ap, targets: [t1 | _]} do
+    setup %{campaign: _c, ap: ap, targets: [t1 | _]} do
       actions =
         Factory.insert_list(20, :action,
           action_page: ap,
@@ -148,12 +148,12 @@ defmodule Proca.Server.MTTWorkerTest do
       Message.mark_all(emails, :sent)
     end
 
-    test "test sending", %{campaign: c, target: %{id: tid, emails: [%{email: email}]}} do
+    test "test sending", %{campaign: c, target: %{id: _tid, emails: [%{email: _email}]}} do
       import Ecto.Query
       Proca.Repo.update_all(from(a in Proca.Action), set: [testing: true])
 
       test_email = "testemail@proca.app"
-      c = %{c | mtt: Proca.Repo.update!(change(c.mtt, %{test_email: test_email}))}
+      Proca.Repo.update!(change(c.mtt, %{test_email: test_email}))
 
       MTTWorker.process_mtt_test_mails()
 
@@ -231,7 +231,7 @@ defmodule Proca.Server.MTTWorkerTest do
     assert String.starts_with?(email.subject, "MTT Subject to #{t.name}")
   end
 
-  test "sending with local template", %{org: org, campaign: c, ap: page, targets: [t | _]} do
+  test "sending with local template", %{org: org, campaign: c, ap: _page, targets: [t | _]} do
     import Proca.Repo
 
     msg = Factory.insert(:message, target: t)

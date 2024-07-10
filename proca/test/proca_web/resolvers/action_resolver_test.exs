@@ -30,7 +30,7 @@ defmodule ProcaWeb.ActionResolverTest do
   end
 
   test "add petition action to a basic data campaign" do
-    %{org: org, pages: [ap]} = blue_story()
+    %{org: _org, pages: [ap]} = blue_story()
 
     params = some_action_data(ap)
 
@@ -84,7 +84,7 @@ defmodule ProcaWeb.ActionResolverTest do
       }
     }
 
-    {:ok, created} =
+    {:ok, _created} =
       ProcaWeb.Resolvers.Action.add_action(nil, action_params, %Absinthe.Resolution{})
 
     sup = Repo.get_by(Supporter, fingerprint: Supporter.base_decode(ref) |> elem(1))
@@ -97,7 +97,7 @@ defmodule ProcaWeb.ActionResolverTest do
   end
 
   test "add custom fields (new and old format)" do
-    %{org: org, pages: [ap]} = blue_story()
+    %{org: _org, pages: [ap]} = blue_story()
 
     custom_fields = fn cf, f ->
       params = some_action_data(ap)
@@ -134,7 +134,7 @@ defmodule ProcaWeb.ActionResolverTest do
   end
 
   test "add signature with tracking" do
-    %{org: org, pages: [ap]} = blue_story()
+    %{org: _org, pages: [ap]} = blue_story()
 
     params =
       some_action_data(ap)

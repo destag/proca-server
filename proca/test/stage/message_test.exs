@@ -73,7 +73,7 @@ defmodule Proca.MessageTest do
 
     test "have different keys", %{
       action: a,
-      pages: [page],
+      pages: [_page],
       msg1: m1,
       msg2: m2
     } do

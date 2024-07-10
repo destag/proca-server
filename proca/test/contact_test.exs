@@ -1,8 +1,7 @@
 defmodule ContactTest do
   use Proca.DataCase
   doctest Proca.Contact
-  alias Proca.{Contact, PublicKey, Org, Repo, ActionPage, Supporter}
-  alias Proca.Server.Encrypt
+  alias Proca.{Contact, ActionPage, Supporter}
   alias Proca.Contact.Data
 
   test "build contact and supporter from basic data" do
@@ -76,7 +75,7 @@ defmodule ContactTest do
     data = apply_changes(chg)
     assert %BasicData{} = data
 
-    %{valid?: true, changes: cd} = Data.to_contact(data, ap)
+    assert %{valid?: true, changes: _cd} = Data.to_contact(data, ap)
 
     fpr = Data.fingerprint(data)
     assert byte_size(fpr) > 0

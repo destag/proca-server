@@ -9,9 +9,9 @@ defmodule Proca.AuthTest do
 
   test "resolve staffer for red user", %{
     red_org: org,
-    red_ap: ap,
+    red_ap: _ap,
     red_user: user,
-    yellow_org: org2,
+    yellow_org: _org2,
     red_campaign: camp
   } do
     user_id = user.id

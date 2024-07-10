@@ -72,7 +72,7 @@ defmodule ProcaWeb.PartnerJoinCampaignTest do
     """
       {
         currentUser {
-          email 
+          email
           roles {
             org { name }
             role
@@ -114,19 +114,19 @@ defmodule ProcaWeb.PartnerJoinCampaignTest do
       launchActionPage(name: "#{name}", message: "#{message}") {
       status
       }
-    } 
+    }
     """
   end
 
-  defp accept_org_request(orgName, confirm) do
+  defp accept_org_request(org_name, confirm) do
     %{
       variables: %{
-        org: orgName,
+        org: org_name,
         confirm: confirm
       },
       operationName: "Accept",
       query: """
-      mutation Accept($org: String!, $confirm: ConfirmInput!) { 
+      mutation Accept($org: String!, $confirm: ConfirmInput!) {
         acceptOrgConfirm(name: $org, confirm: $confirm) {
           status
           actionPage {
@@ -241,8 +241,6 @@ defmodule ProcaWeb.PartnerJoinCampaignTest do
                  }
                }
              } = res4
-
-      yellow_email = yu.email
 
       assert [request_email] = mailbox(yu.email)
 

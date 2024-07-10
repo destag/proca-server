@@ -39,7 +39,7 @@ defmodule ContactDataTest do
 
     new_data = BasicData.from_input(params |> Map.put(:phone, "+48123456789"))
     data = apply_changes(new_data)
-    assert data = %{phone: "+48123456789"}
+    assert %{phone: "+48123456789"} = data
   end
 
   test "If some address is provided, add it to payload" do

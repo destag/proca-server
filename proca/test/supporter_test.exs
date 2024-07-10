@@ -1,9 +1,8 @@
 defmodule SupporterTest do
   use Proca.DataCase
   doctest Proca.Supporter
-  alias Proca.{Contact, PublicKey, Org, Repo, ActionPage, Supporter, Action}
+  alias Proca.{Contact, Repo, Supporter}
   alias Proca.Supporter.Privacy
-  alias Proca.Server.Encrypt
   alias Proca.Factory
 
   import Ecto.Changeset
@@ -11,7 +10,7 @@ defmodule SupporterTest do
 
   test "distributing personal data for blue org" do
     %{
-      org: org,
+      org: _org,
       pages: [ap]
     } = blue_story()
 

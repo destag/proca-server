@@ -1,9 +1,8 @@
 defmodule Proca.Confirm.LaunchPageTest do
   use Proca.DataCase
   import Proca.StoryFactory, only: [red_story: 0]
-  alias Proca.Factory
 
-  alias Proca.{Confirm, Repo, Org}
+  alias Proca.{Confirm, Repo}
   import Ecto.Changeset
 
   use Proca.TestEmailBackend

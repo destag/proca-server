@@ -33,8 +33,8 @@ defmodule ProcaWeb.ExportActionResolverTest do
 
   test "exportAction for org", %{
     org: org,
-    action_page: ap,
-    actions: actions,
+    action_page: _ap,
+    actions: _actions,
     admin: %{user: user}
   } do
     {:ok, l} =
@@ -49,7 +49,7 @@ defmodule ProcaWeb.ExportActionResolverTest do
 
   test "exportAction onlyOptIn filter", %{
     org: org,
-    action_page: ap,
+    action_page: _ap,
     actions: actions,
     admin: %{user: user}
   } do

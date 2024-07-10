@@ -1,9 +1,8 @@
 defmodule RolesTest do
   use Proca.DataCase
   doctest Proca.Staffer.Role
-  alias Proca.{Staffer}
   alias Proca.Staffer.Role
-  import Proca.Permission, only: [can?: 2, add: 2]
+  import Proca.Permission, only: [can?: 2]
   alias Ecto.Changeset
 
   test "can change roles" do
@@ -28,16 +27,16 @@ defmodule RolesTest do
   #     staffer = Factory.build(:staffer)
   #     |> Role.change(:owner)
   #     |> Changeset.apply_action(:update)
-  # 
+  #
   #     assert can?(staffer, [:org_owner, :manage_campaigns])
-  # 
+  #
   #     staffer = staffer
   #     |> Changeset.change(%{perms: add(staffer.perms, [:join_orgs])})
   #     |> Changeset.apply_action(:update)
-  # 
+  #
   #     assert can?(staffer, [:join_orgs, :org_owner, :manage_campaigns])
-  # 
-  #     
+  #
+  #
   #   end
 
   # test "changing roles does not remove non-role permission bits" do

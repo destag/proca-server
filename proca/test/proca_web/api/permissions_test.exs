@@ -6,7 +6,6 @@ defmodule ProcaWeb.PermissionsTest do
 
   use ProcaWeb.ConnCase
   import Proca.StoryFactory, only: [red_story: 0]
-  import Proca.Factory
 
   alias Proca.QueryFixtures
 

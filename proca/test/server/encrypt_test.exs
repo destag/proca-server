@@ -4,7 +4,7 @@ defmodule Server.EncryptTest do
   import Proca.StoryFactory, only: [red_story: 0]
 
   alias Proca.Server.Encrypt
-  alias Proca.{Org, PublicKey, Repo}
+  alias Proca.{Org, Repo}
 
   setup do
     red_story()
@@ -20,7 +20,7 @@ defmodule Server.EncryptTest do
     key = Factory.insert(:public_key, org: red_org, active: true)
     Proca.Server.Notify.updated(key)
 
-    {encrypted, nonce, enc_id, sign_id} = Encrypt.encrypt(red_org, "tabula rasa")
+    {_encrypted, nonce, enc_id, sign_id} = Encrypt.encrypt(red_org, "tabula rasa")
     assert not is_nil(nonce)
     assert enc_id == key.id
 

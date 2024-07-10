@@ -1,8 +1,6 @@
 defmodule ProcaWeb.Api.JoinOrg do
   use ProcaWeb.ConnCase
   import Proca.StoryFactory, only: [red_story: 0]
-  alias Proca.Factory
-  import Ecto.Changeset
   alias Proca.{Repo, Staffer, Org}
   alias Proca.Users.User
 
@@ -33,13 +31,13 @@ defmodule ProcaWeb.Api.JoinOrg do
         |> auth_api_post(query, red_user)
         |> json_response(200)
 
-      assert res = %{
+      assert %{
                errors: [
                  %{
                    extensions: %{code: "permission_denied"}
                  }
                ]
-             }
+             } = res
     end
 
     test "Red bot in hq can join yellow org", %{
@@ -47,7 +45,7 @@ defmodule ProcaWeb.Api.JoinOrg do
       red_bot: %{user: red_user}
     } do
       hq = Repo.get_by(Org, name: Org.instance_org_name())
-      {:ok, adst} = Repo.insert(Staffer.changeset(%{org: hq, user: red_user}))
+      {:ok, _adst} = Repo.insert(Staffer.changeset(%{org: hq, user: red_user}))
 
       query = """
         mutation Join {
@@ -62,7 +60,7 @@ defmodule ProcaWeb.Api.JoinOrg do
         |> auth_api_post(query, red_user)
         |> json_response(200)
 
-      assert res = %{errors: [], data: %{"joinOrg" => %{"status" => "SUCCESS"}}}
+      assert %{"data" => %{"joinOrg" => %{"status" => "SUCCESS"}}} = res
     end
 
     test "Red bot with istance admin rights but no join_orgs cannot join", %{
@@ -71,7 +69,7 @@ defmodule ProcaWeb.Api.JoinOrg do
     } do
       hq = Repo.get_by(Org, name: Org.instance_org_name())
       {:ok, red_user} = Repo.update(User.perms_changeset(red_user, [:instance_owner]))
-      {:ok, adst} = Repo.insert(Staffer.changeset(%{user: red_user, org: hq}))
+      {:ok, _adst} = Repo.insert(Staffer.changeset(%{user: red_user, org: hq}))
 
       query = """
         mutation Join {
@@ -86,13 +84,13 @@ defmodule ProcaWeb.Api.JoinOrg do
         |> auth_api_post(query, red_user)
         |> json_response(200)
 
-      assert res = %{
+      assert %{
                errors: [
                  %{
                    extensions: %{code: "permission_denied"}
                  }
                ]
-             }
+             } = res
     end
 
     test "Red bot can join yellow org and update page", %{
@@ -105,11 +103,7 @@ defmodule ProcaWeb.Api.JoinOrg do
           joinOrg(name: "yellow") {
             status
           },
-          updateActionPage(id: #{yellow_ap.id}) {
-            input: {
-              locale: "fr"
-            }
-          } { 
+          updateActionPage(id: #{yellow_ap.id}, input: { locale: "fr" }) {
             locale
           }
         }
@@ -120,13 +114,12 @@ defmodule ProcaWeb.Api.JoinOrg do
         |> auth_api_post(query, red_user)
         |> json_response(200)
 
-      assert res = %{
-               errors: [],
-               data: %{
+      assert %{
+               "data" => %{
                  "joinOrg" => %{"status" => "SUCCESS"},
                  "updateActionPage" => %{"locale" => "fr"}
                }
-             }
+             } = res
     end
   end
 end

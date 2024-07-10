@@ -6,7 +6,6 @@ defmodule ProcaWeb.TargetsTest do
   alias ProcaWeb.Resolvers.Target
   alias Proca.Campaign
   alias Proca.Factory
-  alias Proca.Action.{Message, MessageContent}
 
   setup do
     red_story()
@@ -47,7 +46,7 @@ defmodule ProcaWeb.TargetsTest do
 
     action = Factory.insert(:action, %{action_page: ap})
 
-    msg = Factory.insert(:message, %{action: action, target: t3})
+    Factory.insert(:message, %{action: action, target: t3})
 
     t3_id = t3.id
 
@@ -58,7 +57,7 @@ defmodule ProcaWeb.TargetsTest do
                nil
              )
 
-    assert {:ok, [t1, t3]} =
+    assert {:ok, [_t1, _t3]} =
              Target.upsert_targets(
                nil,
                %{targets: targets, outdated_targets: :disable, campaign_id: red_campaign.id},
@@ -68,7 +67,7 @@ defmodule ProcaWeb.TargetsTest do
 
   test "adds and update targets to campaign", %{
     red_campaign: red_campaign,
-    yellow_campaign: yellow_campaign
+    yellow_campaign: _yellow_campaign
   } do
     targets = %{
       targets: [
@@ -100,7 +99,7 @@ defmodule ProcaWeb.TargetsTest do
       campaign_id: red_campaign.id
     }
 
-    assert {:ok, targets} = Target.upsert_targets(nil, targets, nil)
+    assert {:ok, _targets} = Target.upsert_targets(nil, targets, nil)
 
     red_camp =
       Proca.Campaign
@@ -125,7 +124,7 @@ defmodule ProcaWeb.TargetsTest do
       campaign_id: red_campaign.id
     }
 
-    assert {:ok, targets} = ProcaWeb.Resolvers.Target.upsert_targets(nil, targets_to_update, nil)
+    assert {:ok, _targets} = ProcaWeb.Resolvers.Target.upsert_targets(nil, targets_to_update, nil)
 
     red_camp =
       Proca.Campaign

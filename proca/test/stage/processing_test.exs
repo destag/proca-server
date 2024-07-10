@@ -21,7 +21,7 @@ defmodule Proca.Stage.ProcessingTest do
     |> Map.put(:pid, pid)
   end
 
-  test "action pile", %{pid: pid, page: ap} do
+  test "action pile", %{pid: _pid, page: ap} do
     action =
       Factory.insert(:action,
         action_page: ap,
@@ -38,7 +38,7 @@ defmodule Proca.Stage.ProcessingTest do
     :timer.sleep(10_000)
   end
 
-  test "coalition action processing", %{org: lead, partners: pts} do
+  test "coalition action processing", %{org: _lead, partners: pts} do
     num_pts = length(pts)
 
     action_opts = [processing_status: :new, supporter_processing_status: :new]

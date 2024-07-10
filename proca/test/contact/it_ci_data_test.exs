@@ -3,12 +3,9 @@ defmodule ItCiDataTest do
   doctest Proca.Contact.ItCiData
 
   alias Proca.Contact.ItCiData
-  alias Proca.Contact.Data
-  alias Proca.Contact.{Input}
   import Proca.Repo
   import Ecto.Changeset
   alias Proca.Factory
-  import ProcaWeb.Helper, only: [format_errors: 1]
 
   setup do
     names = %{
@@ -87,7 +84,7 @@ defmodule ItCiDataTest do
     c = ItCiData.from_input(d)
     assert c.valid?
 
-    {:ok, %{contact_ref: ref}} =
+    {:ok, %{contact_ref: _ref}} =
       ProcaWeb.Resolvers.Action.add_action_contact(
         nil,
         %{
@@ -119,7 +116,7 @@ defmodule ItCiDataTest do
     assert c.valid?
   end
 
-  test "validates with email added", %{italian_passport: d, page: page} do
+  test "validates with email added", %{italian_passport: d, page: _page} do
     Map.put(d, :email, "test@envelopi.it")
     c = ItCiData.from_input(d)
     assert c.valid?

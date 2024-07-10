@@ -16,7 +16,7 @@ defmodule TargetTest do
     }
   end
 
-  test "handle_bounce adds bounce reason", %{target: target, message: message, email: email} do
+  test "handle_bounce adds bounce reason", %{target: _target, message: message, email: email} do
     params = %{
       id: message.id,
       email: email.email,
@@ -50,7 +50,7 @@ defmodule TargetTest do
   }
   """
 
-  test "bounce event from Mailjet", %{target: target, message: message, email: email} do
+  test "bounce event from Mailjet", %{target: _target, message: message, email: email} do
     event =
       @bounce_event1
       |> Jason.decode!()
@@ -64,23 +64,27 @@ defmodule TargetTest do
   end
 
   test "Delete a target", %{target: t} do
-    import Ecto.Changeset
     alias Proca.Repo
+
+    # foo = %{
+    #   id: t.id
+    # }
+
+    # assert foo = %{id: 555_555}
+    # assert %{id: 555_555} = foo
 
     del_res =
       t
       |> Target.deleteset()
       |> Repo.delete()
-      |> IO.inspect()
 
-    assert del_res =
-             {:error,
-              %{
-                errors: [
-                  messages:
-                    {"has messages",
-                     [constraint: :foreign, constraint_name: "messages_target_id_fkey"]}
-                ]
-              }}
+    assert {:error,
+            %{
+              errors: [
+                messages:
+                  {"has messages",
+                   [constraint: :foreign, constraint_name: "messages_target_id_fkey"]}
+              ]
+            }} = del_res
   end
 end

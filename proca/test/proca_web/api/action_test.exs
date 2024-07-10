@@ -23,7 +23,7 @@ defmodule ProcaWeb.Api.ActionTest do
     }
 
     result = ProcaWeb.Resolvers.Action.add_action(:unused, params, %Absinthe.Resolution{})
-    assert result = {:ok, %{contact_ref: ref}}
+    assert {:ok, %{contact_ref: ^ref}} = result
     result
   end
 
@@ -109,7 +109,7 @@ defmodule ProcaWeb.Api.ActionTest do
     assert not action.testing
   end
 
-  test "create testing action", %{org: org, pages: [ap]} do
+  test "create testing action", %{org: _org, pages: [ap]} do
     action_with_contact(
       ap,
       %{action_type: "petition", testing: true},
@@ -176,7 +176,7 @@ defmodule ProcaWeb.Api.ActionTest do
   }
   """
 
-  test "create stripe donation action", %{org: org, pages: [ap]} do
+  test "create stripe donation action", %{org: _org, pages: [ap]} do
     {:ok, %{contact_ref: ref}} =
       action_with_contact(
         ap,
@@ -216,8 +216,8 @@ defmodule ProcaWeb.Api.ActionTest do
     assert last_action.donation.frequency_unit == :one_off
   end
 
-  test "create action with location tracking", %{org: org, pages: [ap]} do
-    {:ok, result} =
+  test "create action with location tracking", %{org: _org, pages: [ap]} do
+    {:ok, _result} =
       action_with_contact(
         ap,
         %{action_type: "x"},
@@ -231,7 +231,7 @@ defmodule ProcaWeb.Api.ActionTest do
     assert action.source_id != nil
   end
 
-  test "create action with null optIn", %{org: org, pages: [ap]} do
+  test "create action with null optIn", %{org: _org, pages: [ap]} do
     params = %{
       action_page_id: ap.id,
       contact: %{first_name: "Jan", email: "j@a.n"},
@@ -244,10 +244,7 @@ defmodule ProcaWeb.Api.ActionTest do
         context: %{}
       })
 
-    IO.inspect(struct!(Proca.Supporter.Privacy, %{}))
-
     assert {:ok, %{contact_ref: _ref}} = result
-    result
 
     action =
       Repo.one(
@@ -262,13 +259,12 @@ defmodule ProcaWeb.Api.ActionTest do
   end
 
   test "create mtt action", %{campaign: c, pages: [ap]} do
-    c =
-      Repo.update!(
-        Campaign.changeset(
-          Repo.preload(c, [:mtt]),
-          %{mtt: %{start_at: ~N[2022-01-01 10:00:00], end_at: ~N[2022-01-10 18:00:00]}}
-        )
+    Repo.update!(
+      Campaign.changeset(
+        Repo.preload(c, [:mtt]),
+        %{mtt: %{start_at: ~N[2022-01-01 10:00:00], end_at: ~N[2022-01-10 18:00:00]}}
       )
+    )
 
     targets = Factory.insert_list(3, :target)
 

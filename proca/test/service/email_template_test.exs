@@ -2,15 +2,12 @@ defmodule Proca.EmailTemplateTest do
   use Proca.DataCase
   @moduletag start: [:stats]
   use Proca.TestEmailBackend
-  import Ecto.Changeset
   import Proca.Repo
 
   import Proca.StoryFactory, only: [violet_story: 0]
 
-  alias Proca.Service.EmailTemplate
-
   setup do
-    ctx = violet_story()
+    violet_story()
   end
 
   test "sending a thank you email with local template", %{org: org, ap: page} do
@@ -35,8 +32,7 @@ defmodule Proca.EmailTemplateTest do
     assert String.contains?(email.html_body, "You decided to subscribe")
   end
 
-  test "sending a thank you email with remote template", %{org: org, ap: page} do
-    org = Proca.Repo.preload(org, [:email_backend])
+  test "sending a thank you email with remote template", %{org: _org, ap: page} do
     page = update!(Proca.ActionPage.changeset(page, %{thank_you_template: "thank_you"}))
     action = Factory.insert(:action, action_page: page, supporter_processing_status: :accepted)
 

@@ -6,7 +6,7 @@ defmodule ReleaseTest do
       Code.compile_file("config/releases.exs")
     rescue
       e in SyntaxError -> reraise e, __STACKTRACE__
-      e in RuntimeError -> :ok
+      _e in RuntimeError -> :ok
     end
   end
 end

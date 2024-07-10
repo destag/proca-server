@@ -4,10 +4,9 @@ defmodule Proca.Stage.DetailBackendTest do
 
   import Proca.StoryFactory, only: [blue_story: 0]
   import Ecto.Changeset
-  import Ecto.Query
   alias Proca.Factory
 
-  alias Proca.{Repo, Action, Supporter}
+  alias Proca.{Repo, Supporter}
   alias Proca.TestDetailBackend
   alias Proca.Service.Detail
   import Logger

@@ -5,9 +5,6 @@ defmodule Proca.Server.StatsTest do
   import Proca.StoryFactory, only: [red_story: 0]
   import Proca.Factory
   alias Proca.Server.Stats
-  alias Proca.{Repo, Action, Supporter}
-
-  import Ecto.Query
 
   setup do
     red_story()
@@ -15,9 +12,9 @@ defmodule Proca.Server.StatsTest do
 
   test "Signed second campaign with just action", %{
     red_ap: ap1,
-    red_campaign: c1,
+    red_campaign: _c1,
     yellow_ap: ap2,
-    yellow_campaign: c2
+    yellow_campaign: _c2
   } do
     aa = %{
       action_type: "sign",
@@ -39,7 +36,7 @@ defmodule Proca.Server.StatsTest do
         |> Map.merge(aa)
       )
 
-    act2 =
+    _act2 =
       insert(
         :action,
         %{
@@ -51,7 +48,7 @@ defmodule Proca.Server.StatsTest do
       )
 
     # IO.inspect(Repo.all(from(a in Action, preload: [:supporter])))
-    st = Stats.calculate()
+    Stats.calculate()
 
     # IO.inspect(st, label: "AAA")
   end
