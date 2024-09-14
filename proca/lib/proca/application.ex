@@ -15,7 +15,7 @@ defmodule Proca.Application do
     # Standard Phoenix processes
     children = [
       # Start the Telemetry supervisor
-      ProcaWeb.Telemetry,
+      # ProcaWeb.Telemetry,
 
       # Start the Ecto repository
       Proca.Repo,
@@ -36,7 +36,8 @@ defmodule Proca.Application do
       # Processing / queue management
       {Registry, [keys: :unique, name: Proca.Pipes.Registry]},
       {Proca.Pipes.Supervisor, []},
-      {Proca.Pipes.Connection, Proca.Pipes.queue_url()}
+      {Proca.Pipes.Connection, Proca.Pipes.queue_url()},
+      {Proca.Server.MTTScheduler, []}
     ]
 
     # Proca SErvers
