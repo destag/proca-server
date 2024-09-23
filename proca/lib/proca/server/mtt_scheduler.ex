@@ -5,6 +5,12 @@ defmodule Proca.Server.MTTScheduler do
 
   use GenServer
 
+  import Ecto.Query
+
+  alias Proca.Repo
+  alias Proca.Campaign
+  alias Proca.MTT
+
   # @schedule_interval :timer.hours(1)
   @schedule_interval :timer.seconds(60)
 
@@ -36,10 +42,11 @@ defmodule Proca.Server.MTTScheduler do
   end
 
   defp process_messages() do
-    Time.utc_now() |> hourly_goal() |> dbg()
+    goal = Time.utc_now() |> hourly_goal()
 
     fetch_messages()
     |> Enum.group_by(& &1.target_id)
+    |> Enum.map(fn {target_id, messages_batch} -> {target_id, Enum.take(messages_batch, goal)} end)
     |> Enum.each(fn {target_id, messages_batch} ->
       start_processor(target_id, messages_batch)
     end)
@@ -50,49 +57,27 @@ defmodule Proca.Server.MTTScheduler do
   end
 
   defp fetch_messages() do
-    # Repo.all(from m in Message, select: m)
-    [
-      %{
-        target_id: 1,
-        content: "hello"
-      },
-      %{
-        target_id: 2,
-        content: "hello"
-      },
-      %{
-        target_id: 1,
-        content: "hello w"
-      },
-      %{
-        target_id: 1,
-        content: "msg1"
-      },
-      %{
-        target_id: 1,
-        content: "msg2"
-      },
-      %{
-        target_id: 1,
-        content: "msg3"
-      },
-      %{
-        target_id: 1,
-        content: "msg4"
-      },
-      %{
-        target_id: 2,
-        content: "hello w"
-      },
-      %{
-        target_id: 313,
-        content: "hello wo"
-      },
-      %{
-        target_id: 1,
-        content: "nue"
-      }
-    ]
+    running_mtts =
+      from(c in Campaign,
+        join: mtt in MTT,
+        on: mtt.campaign_id == c.id,
+        where: mtt.start_at <= from_now(0, "day") and mtt.end_at >= from_now(0, "day"),
+        preload: [:mtt]
+      )
+      |> Repo.all()
+
+    sendable_target_ids =
+      from(t in Proca.Target,
+        join: c in assoc(t, :campaign),
+        join: te in assoc(t, :emails),
+        where: c.id in ^running_mtts and c.id == ^id and te.email_status in [:active, :none],
+        distinct: t.id,
+        select: t.id
+      )
+      |> Repo.all()
+
+    Proca.Action.Message.select_by_targets(sendable_target_ids, false, false)
+    |> Repo.all()
   end
 
   @spec hourly_goal(Time.t()) :: integer()
