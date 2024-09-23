@@ -2,6 +2,7 @@ defmodule Proca.Server.MTTProcessor do
   @moduledoc """
     Server which processes MTT messages.
   """
+  alias Proca.Pipes.Connection
 
   defmodule State do
     @moduledoc false
@@ -38,6 +39,12 @@ defmodule Proca.Server.MTTProcessor do
   def handle_info(:work, %State{messages: [next_message | rest]} = state) do
     IO.puts(
       "message from worker: #{state.target_id} at #{DateTime.utc_now()}: #{inspect(next_message)}"
+    )
+
+    Connection.publish(
+      %{message: next_message, target_id: state.target_id},
+      "org.1.send",
+      "mailjet"
     )
 
     if DateTime.diff(DateTime.utc_now(), state.start_time, :minute) < 60 do
